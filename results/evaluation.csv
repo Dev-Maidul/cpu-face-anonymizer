@@ -1,0 +1,4 @@
+detector,true_positives,false_positives,false_negatives,precision,recall,f1
+haar_cascade,68,56,275,0.548,0.198,0.291
+mobilenet_ssd,70,2,273,0.972,0.204,0.337
+mediapipe_blazeface,20,6,323,0.769,0.058,0.108

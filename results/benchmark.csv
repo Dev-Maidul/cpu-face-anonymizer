@@ -1,0 +1,4 @@
+detector,model_size_mb,num_frames,total_time_s,fps,latency_ms_per_frame,cpu_percent,peak_memory_mb
+haar_cascade,0.0,60,3.391,17.69,56.51,568.8,691.83
+mobilenet_ssd,10.172,60,0.733,81.84,12.22,318.0,734.98
+mediapipe_blazeface,0.219,60,0.126,475.18,2.1,125.5,778.33

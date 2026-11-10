@@ -1,0 +1,18 @@
+# Claude Code / AI assistant artifacts -- never pushed
+CLAUDE.md
+.claude/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Datasets (regenerate via `python src/data_prep.py`)
+data/
+
+# Pretrained model weights (regenerate via `python src/detectors/download_models.py`)
+src/detectors/models/
+
+# OS
+.DS_Store
