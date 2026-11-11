@@ -35,3 +35,15 @@ mediapipe_blazeface,precision_by_size,<20px,0,0.0,,,,,,,,,
 mediapipe_blazeface,precision_by_size,20-50px,0,0.0,,,,,,,,,
 mediapipe_blazeface,precision_by_size,50-100px,0,0.0,,,,,,,,,
 mediapipe_blazeface,precision_by_size,>100px,1140,547.0,,,0.6758,,,0.6523,0.7008,,
+mediapipe_blazeface_full,overall,overall,4242,764.0,34881.0,39123.0,0.8474,0.1084,0.1923,0.8341,0.8588,0.0962,0.1215
+mediapipe_blazeface_full,recall_by_size,<20px,0,,19197.0,19197.0,,0.0,,,,0.0,0.0
+mediapipe_blazeface_full,recall_by_size,20-50px,397,,12200.0,12597.0,,0.0315,,,,0.0256,0.0376
+mediapipe_blazeface_full,recall_by_size,50-100px,1851,,2744.0,4595.0,,0.4028,,,,0.3774,0.4302
+mediapipe_blazeface_full,recall_by_size,>100px,1994,,740.0,2734.0,,0.7293,,,,0.7092,0.7489
+mediapipe_blazeface_full,recall_by_blur,clear,2837,,2532.0,5369.0,,0.5284,,,,0.4963,0.5622
+mediapipe_blazeface_full,recall_by_blur,normal,1317,,9064.0,10381.0,,0.1269,,,,0.1112,0.1449
+mediapipe_blazeface_full,recall_by_blur,heavy,88,,23285.0,23373.0,,0.0038,,,,0.0027,0.0054
+mediapipe_blazeface_full,precision_by_size,<20px,0,0.0,,,,,,,,,
+mediapipe_blazeface_full,precision_by_size,20-50px,435,199.0,,,0.6861,,,0.6415,0.73,,
+mediapipe_blazeface_full,precision_by_size,50-100px,2227,469.0,,,0.826,,,0.8082,0.8417,,
+mediapipe_blazeface_full,precision_by_size,>100px,1580,96.0,,,0.9427,,,0.9314,0.9538,,

@@ -1,0 +1,1 @@
+No tested setting got every detector's re-detection rate <= 0.02. Strongest tested setting was blur_75 / pixelate_20; see privacy_check.csv for the full table.
