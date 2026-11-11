@@ -1,0 +1,14 @@
+label,kind,recall,ms,recall_per_ms
+mobilenet_ssd (scale_1.0_only),single/multi-scale,0.0857,15.695,0.005460337687161516
+mediapipe_blazeface (scale_1.0_only),single/multi-scale,0.0291,7.706,0.0037762782247599273
+mobilenet_ssd (scale_1.0_1.5),single/multi-scale,0.0859,32.303,0.0026591957403337154
+haar_cascade (scale_1.0_only),single/multi-scale,0.1529,63.402,0.002411595848711397
+mediapipe_blazeface (scale_1.0_1.5),single/multi-scale,0.0293,16.819,0.0017420774124502051
+mobilenet_ssd (scale_1.0_1.5_2.0),single/multi-scale,0.0859,49.52,0.0017346526655896608
+mobilenet_ssd + mediapipe_blazeface,union,0.0865,50.206,0.0017229016452216864
+mediapipe_blazeface (scale_1.0_1.5_2.0),single/multi-scale,0.0294,27.291,0.0010772782235901946
+haar_cascade (scale_1.0_1.5),single/multi-scale,0.196,187.871,0.0010432690516364953
+haar_cascade (scale_1.0_1.5_2.0),single/multi-scale,0.2283,387.414,0.0005892920751444192
+haar_cascade + mobilenet_ssd,union,0.1766,543.051,0.000325199658963891
+haar_cascade + mobilenet_ssd + mediapipe_blazeface,union,0.1776,548.228,0.00032395280795581403
+haar_cascade + mediapipe_blazeface,union,0.1617,503.199,0.0003213440408267902

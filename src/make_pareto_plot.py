@@ -55,6 +55,13 @@ def main():
     for p in pareto:
         print(f"  {p}")
 
+    df["recall_per_ms"] = df["recall"] / df["ms"]
+    df.sort_values("recall_per_ms", ascending=False).to_csv(
+        os.path.join(RESULTS_DIR, "recall_per_ms_ranking.csv"), index=False)
+    best = df.sort_values("recall_per_ms", ascending=False).iloc[0]
+    print(f"\nBest recall-per-millisecond configuration: {best['label']} "
+          f"(recall={best['recall']:.4f}, ms/image={best['ms']:.1f}, recall/ms={best['recall_per_ms']:.5f})")
+
 
 if __name__ == "__main__":
     main()
