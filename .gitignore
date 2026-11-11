@@ -27,3 +27,5 @@ results/raw_detections_multiscale/
 
 # OS
 .DS_Store
+config.bat
+node_modules

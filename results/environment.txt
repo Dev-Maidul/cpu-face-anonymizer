@@ -16,8 +16,8 @@ Installed library versions (subset):
   matplotlib==3.11.2
   mediapipe==1.2.2
   numpy==2.5.4
-  onnxruntime==1.31.1
   opencv-python==4.10.0.84
   pandas==3.1.1
   psutil==7.2.2
   pytest==9.2.0
+  tabulate==0.10.0

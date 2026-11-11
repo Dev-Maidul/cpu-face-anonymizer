@@ -5,6 +5,7 @@ shared process). Prints a single JSON result line to stdout.
 
 Usage: python _benchmark_worker.py <detector_name> <repeats> <n_images> <num_threads> [video_path]
 """
+import utils.session
 import json
 import os
 import statistics
