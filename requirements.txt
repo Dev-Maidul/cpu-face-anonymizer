@@ -5,3 +5,4 @@ pandas
 matplotlib
 psutil
 onnxruntime
+pytest

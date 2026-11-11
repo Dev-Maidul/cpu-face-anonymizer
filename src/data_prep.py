@@ -1,12 +1,16 @@
 """
-Parse WIDER FACE validation ground-truth and select a small, manageable
-sample of images (with their bounding boxes) for detector evaluation.
+Download and parse the FULL WIDER FACE validation split (3226 images) with
+all ground-truth attribute flags (blur, expression, illumination, invalid,
+occlusion, pose), for a rigorous evaluation.
 
-Run after data/WIDER_val.zip has finished downloading and been extracted.
+Images are NOT copied/flattened into a separate folder (that was fine for a
+60-image sample in Phase 1, not for 3226 images / ~1GB) -- the extracted
+WIDER_val/images tree is kept as-is, and the ground-truth file stores paths
+relative to it. Run this once; it downloads ~363MB and keeps the extracted
+images on disk (not committed to git -- see .gitignore).
 """
+import json
 import os
-import random
-import shutil
 import urllib.request
 import zipfile
 
@@ -17,16 +21,19 @@ GT_FILE = os.path.join(SPLIT_DIR, "wider_face_val_bbx_gt.txt")
 VAL_ZIP = os.path.join(DATA_DIR, "WIDER_val.zip")
 SPLIT_ZIP = os.path.join(DATA_DIR, "wider_face_split.zip")
 VAL_EXTRACT_DIR = os.path.join(DATA_DIR, "WIDER_val")
-SAMPLE_DIR = os.path.join(DATA_DIR, "sample")
-N_IMAGES = 60  # keep it small and fast for a CPU-only course project
-RANDOM_SEED = 42
+IMAGES_DIR = os.path.join(VAL_EXTRACT_DIR, "images")
+GT_OUT_PATH = os.path.join(DATA_DIR, "ground_truth_full.jsonl")
 
 HF_BASE = "https://huggingface.co/datasets/CUHK-CSE/wider_face/resolve/main/data"
+
+# WIDER FACE attribute column order, per wider_face_split/readme.txt:
+# x1, y1, w, h, blur, expression, illumination, invalid, occlusion, pose
+ATTR_NAMES = ["blur", "expression", "illumination", "invalid", "occlusion", "pose"]
 
 
 def download_if_missing():
     os.makedirs(DATA_DIR, exist_ok=True)
-    if not os.path.isfile(SPLIT_ZIP):
+    if not os.path.isfile(SPLIT_ZIP) and not os.path.isdir(SPLIT_DIR):
         print("Downloading wider_face_split.zip (annotations, ~3.6MB)...")
         urllib.request.urlretrieve(f"{HF_BASE}/wider_face_split.zip", SPLIT_ZIP)
     if not os.path.isdir(SPLIT_DIR):
@@ -37,76 +44,59 @@ def download_if_missing():
         urllib.request.urlretrieve(f"{HF_BASE}/WIDER_val.zip", VAL_ZIP)
 
 
+def extract_val_zip():
+    if os.path.isdir(VAL_EXTRACT_DIR):
+        print("WIDER_val already extracted.")
+        return
+    print("Extracting WIDER_val.zip (this is the full ~3226-image validation set)...")
+    with zipfile.ZipFile(VAL_ZIP, "r") as z:
+        z.extractall(DATA_DIR)
+    print("Done extracting.")
+
+
 def parse_gt(gt_path):
-    """Returns dict: {relative_image_path: [(x, y, w, h), ...]}"""
-    annotations = {}
+    """Returns list of {"path": str, "boxes": [{"x","y","w","h", <attrs>}, ...]}."""
     with open(gt_path, "r") as f:
         lines = [line.strip() for line in f.readlines()]
 
+    records = []
     i = 0
     while i < len(lines):
         img_path = lines[i]
         i += 1
         num_boxes = int(lines[i])
         i += 1
+        n_lines_to_read = max(num_boxes, 1)  # WIDER FACE quirk: 0 boxes still has 1 dummy line
         boxes = []
-        # WIDER FACE quirk: num_boxes can be 0 but still has one dummy line
-        n_lines_to_read = max(num_boxes, 1)
         for j in range(n_lines_to_read):
             parts = lines[i + j].split()
-            x, y, w, h = map(int, parts[:4])
-            if num_boxes > 0:
-                boxes.append((x, y, w, h))
+            if num_boxes > 0 and len(parts) >= 10:
+                x, y, w, h = map(int, parts[:4])
+                attrs = dict(zip(ATTR_NAMES, map(int, parts[4:10])))
+                boxes.append({"x": x, "y": y, "w": w, "h": h, **attrs})
         i += n_lines_to_read
-        annotations[img_path] = boxes
-    return annotations
+        records.append({"path": img_path, "boxes": boxes})
+    return records
 
 
-def extract_val_zip():
-    if os.path.isdir(VAL_EXTRACT_DIR):
-        print("WIDER_val already extracted.")
-        return
-    print("Extracting WIDER_val.zip ...")
-    with zipfile.ZipFile(VAL_ZIP, "r") as z:
-        z.extractall(DATA_DIR)
-    print("Done extracting.")
+def build_ground_truth():
+    records = parse_gt(GT_FILE)
+    with open(GT_OUT_PATH, "w") as out:
+        for rec in records:
+            out.write(json.dumps(rec) + "\n")
 
-
-def build_sample():
-    annotations = parse_gt(GT_FILE)
-    # keep only images that actually have at least 1 face, for a meaningful eval
-    valid_items = [(k, v) for k, v in annotations.items() if len(v) > 0]
-    random.seed(RANDOM_SEED)
-    random.shuffle(valid_items)
-    chosen = valid_items[:N_IMAGES]
-
-    os.makedirs(SAMPLE_DIR, exist_ok=True)
-    gt_out_path = os.path.join(SAMPLE_DIR, "ground_truth.txt")
-    with open(gt_out_path, "w") as out:
-        copied = 0
-        for rel_path, boxes in chosen:
-            src = os.path.join(VAL_EXTRACT_DIR, "images", rel_path)
-            if not os.path.isfile(src):
-                continue
-            flat_name = rel_path.replace("/", "__")
-            dst = os.path.join(SAMPLE_DIR, flat_name)
-            shutil.copy(src, dst)
-            out.write(flat_name + "\n")
-            out.write(str(len(boxes)) + "\n")
-            for (x, y, w, h) in boxes:
-                out.write(f"{x} {y} {w} {h}\n")
-            copied += 1
-    print(f"Copied {copied} images into {SAMPLE_DIR}")
-    print(f"Ground truth written to {gt_out_path}")
+    n_images = len(records)
+    n_boxes = sum(len(r["boxes"]) for r in records)
+    n_invalid = sum(1 for r in records for b in r["boxes"] if b["invalid"] == 1)
+    print(f"Wrote {GT_OUT_PATH}")
+    print(f"  {n_images} images, {n_boxes} boxes total, {n_invalid} flagged invalid=1 (excluded from eval)")
 
 
 if __name__ == "__main__":
     download_if_missing()
     extract_val_zip()
-    build_sample()
-    # clean up the large intermediates, keep only data/sample
-    for path in (VAL_ZIP, SPLIT_ZIP, VAL_EXTRACT_DIR):
-        if os.path.isdir(path):
-            shutil.rmtree(path)
-        elif os.path.isfile(path):
+    build_ground_truth()
+    # remove only the zip archives; keep the extracted images (needed for the full eval)
+    for path in (VAL_ZIP, SPLIT_ZIP):
+        if os.path.isfile(path):
             os.remove(path)

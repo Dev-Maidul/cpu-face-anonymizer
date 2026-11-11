@@ -9,12 +9,12 @@ import cv2
 import pandas as pd
 
 from detectors import ALL_DETECTORS
+from geometry import match_boxes, IOU_THRESHOLD
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SAMPLE_DIR = os.path.join(HERE, "..", "data", "sample")
 GT_PATH = os.path.join(SAMPLE_DIR, "ground_truth.txt")
 RESULTS_DIR = os.path.join(HERE, "..", "results")
-IOU_THRESHOLD = 0.5
 
 
 def load_ground_truth(path):
@@ -31,41 +31,6 @@ def load_ground_truth(path):
         i += n
         gt[fname] = boxes
     return gt
-
-
-def iou(box_a, box_b):
-    ax, ay, aw, ah = box_a
-    bx, by, bw, bh = box_b
-    ax2, ay2 = ax + aw, ay + ah
-    bx2, by2 = bx + bw, by + bh
-
-    inter_x1, inter_y1 = max(ax, bx), max(ay, by)
-    inter_x2, inter_y2 = min(ax2, bx2), min(ay2, by2)
-    inter_w, inter_h = max(0, inter_x2 - inter_x1), max(0, inter_y2 - inter_y1)
-    inter_area = inter_w * inter_h
-
-    union_area = aw * ah + bw * bh - inter_area
-    return inter_area / union_area if union_area > 0 else 0.0
-
-
-def match_boxes(pred_boxes, gt_boxes, threshold=IOU_THRESHOLD):
-    """Greedy matching: returns (true_positives, false_positives, false_negatives)."""
-    matched_gt = set()
-    tp = 0
-    for pb in pred_boxes:
-        best_iou, best_j = 0.0, -1
-        for j, gb in enumerate(gt_boxes):
-            if j in matched_gt:
-                continue
-            cur_iou = iou(pb, gb)
-            if cur_iou > best_iou:
-                best_iou, best_j = cur_iou, j
-        if best_iou >= threshold:
-            matched_gt.add(best_j)
-            tp += 1
-    fp = len(pred_boxes) - tp
-    fn = len(gt_boxes) - len(matched_gt)
-    return tp, fp, fn
 
 
 def evaluate_detector(det, gt):

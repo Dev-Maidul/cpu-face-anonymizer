@@ -21,8 +21,12 @@ def pixelate_faces(frame_bgr, boxes, blocks=10):
         roi = out[y:y + h, x:x + w]
         if roi.size == 0:
             continue
+        # resize back to the ROI's *actual* (possibly border-clipped) shape,
+        # not the requested (w, h) -- those can differ when the box runs past
+        # the frame edge, which previously crashed with a broadcast error.
+        roi_h, roi_w = roi.shape[:2]
         small = cv2.resize(roi, (blocks, blocks), interpolation=cv2.INTER_LINEAR)
-        out[y:y + h, x:x + w] = cv2.resize(small, (w, h), interpolation=cv2.INTER_NEAREST)
+        out[y:y + roi_h, x:x + roi_w] = cv2.resize(small, (roi_w, roi_h), interpolation=cv2.INTER_NEAREST)
     return out
 
 

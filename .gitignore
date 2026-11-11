@@ -14,5 +14,8 @@ data/
 # Pretrained model weights (regenerate via `python src/detectors/download_models.py`)
 src/detectors/models/
 
+# Report/PPT deliverables (submitted to course, not pushed to GitHub)
+report/
+
 # OS
 .DS_Store
