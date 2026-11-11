@@ -1,0 +1,6 @@
+| config                                             |   n_detectors |   recall_overall |   precision_overall |   ms_per_image |   recall_<20px |   recall_20-50px |   recall_50-100px |   recall_>100px |
+|:---------------------------------------------------|--------------:|-----------------:|--------------------:|---------------:|---------------:|-----------------:|------------------:|----------------:|
+| haar_cascade + mobilenet_ssd                       |             2 |            0.177 |               0.713 |        543.051 |              0 |            0.204 |             0.489 |           0.764 |
+| haar_cascade + mediapipe_blazeface                 |             2 |            0.162 |               0.669 |        503.199 |              0 |            0.203 |             0.424 |           0.663 |
+| mobilenet_ssd + mediapipe_blazeface                |             2 |            0.086 |               0.87  |         50.206 |              0 |            0.001 |             0.273 |           0.774 |
+| haar_cascade + mobilenet_ssd + mediapipe_blazeface |             3 |            0.178 |               0.687 |        548.228 |              0 |            0.204 |             0.489 |           0.779 |

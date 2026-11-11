@@ -1,0 +1,5 @@
+| detector            | source            |   n_frames |   n_repeats |   median_latency_ms |   iqr_latency_ms |   fps_median |   peak_memory_mb |   model_size_mb |   num_threads |
+|:--------------------|:------------------|-----------:|------------:|--------------------:|-----------------:|-------------:|-----------------:|----------------:|--------------:|
+| haar_cascade        | wider_face_subset |        200 |           5 |             498.022 |           67.356 |         2.01 |           266.36 |           0     |             1 |
+| mobilenet_ssd       | wider_face_subset |        200 |           5 |              45.029 |            2.575 |        22.21 |           673.11 |          10.172 |             1 |
+| mediapipe_blazeface | wider_face_subset |        200 |           5 |               5.177 |            0.429 |       193.14 |           840.38 |           0.219 |             1 |
