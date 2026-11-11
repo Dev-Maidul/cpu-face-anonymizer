@@ -37,8 +37,7 @@ python3 src/privacy_check.py
 
 echo "== 8/8: benchmark (latency/memory, isolated per detector) + figures/tables =="
 python3 src/benchmark.py
-python3 src/make_plots.py
+python3 src/make_pareto_plot.py
 python3 src/make_report_tables.py
-python3 src/anonymize.py
 
 echo "Done. See results/ for every CSV, figure, and generated table."

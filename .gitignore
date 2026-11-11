@@ -11,6 +11,10 @@ __pycache__/
 # Datasets (regenerate via `python src/data_prep.py`)
 data/
 
+# Personal demo photo for anonymize.py + its generated output -- never commit
+# a real person's photo (see anonymize.py's note on why no WIDER FACE image is used)
+results/anonymized_samples/
+
 # Pretrained model weights (regenerate via `python src/detectors/download_models.py`)
 src/detectors/models/
 

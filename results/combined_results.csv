@@ -1,4 +1,0 @@
-detector,model_size_mb,num_frames,total_time_s,fps,latency_ms_per_frame,cpu_percent,peak_memory_mb,true_positives,false_positives,false_negatives,precision,recall,f1
-haar_cascade,0.0,60,3.391,17.69,56.51,568.8,691.83,68,56,275,0.548,0.198,0.291
-mobilenet_ssd,10.172,60,0.733,81.84,12.22,318.0,734.98,70,2,273,0.972,0.204,0.337
-mediapipe_blazeface,0.219,60,0.126,475.18,2.1,125.5,778.33,20,6,323,0.769,0.058,0.108

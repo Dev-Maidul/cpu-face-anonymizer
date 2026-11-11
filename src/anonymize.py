@@ -31,17 +31,27 @@ def pixelate_faces(frame_bgr, boxes, blocks=10):
 
 
 if __name__ == "__main__":
+    # NOTE: this demo intentionally does NOT default to a WIDER FACE image.
+    # Any WIDER FACE scene contains bystanders a detector will miss, so a
+    # "before/after" demo built from one would still commit an unredacted,
+    # identifiable face to the repo (see README's privacy/licensing note) --
+    # exactly the problem this project is about. Supply your own consented
+    # photo, or a permissively-licensed (e.g. CC0) image with a cited source,
+    # at the path below to generate a real before/after demo locally; nothing
+    # is committed by default.
     import os
     from detectors import ALL_DETECTORS
 
-    sample_dir = os.path.join(os.path.dirname(__file__), "..", "data", "sample")
+    own_photo = os.path.join(os.path.dirname(__file__), "..", "data", "own_photo.jpg")
     results_dir = os.path.join(os.path.dirname(__file__), "..", "results", "anonymized_samples")
-    os.makedirs(results_dir, exist_ok=True)
 
-    # pick a sample image with several visible faces for a clear before/after demo
-    demo_filename = "2--Demonstration__2_Demonstration_Demonstrators_2_488.jpg"
-    img_path = os.path.join(sample_dir, demo_filename)
-    frame = cv2.imread(img_path)
+    if not os.path.isfile(own_photo):
+        print(f"No demo photo at {own_photo} -- skipping visual demo.")
+        print("To generate one: place a photo YOU have the rights to use at that path and re-run this script.")
+        raise SystemExit(0)
+
+    os.makedirs(results_dir, exist_ok=True)
+    frame = cv2.imread(own_photo)
     cv2.imwrite(os.path.join(results_dir, "original.jpg"), frame)
 
     for det in ALL_DETECTORS:
