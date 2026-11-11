@@ -1,8 +1,8 @@
 opencv-python==4.10.0.84
-mediapipe
-numpy
-pandas
-matplotlib
-psutil
-onnxruntime
-pytest
+mediapipe==1.2.2
+numpy==2.5.4
+pandas==3.1.1
+matplotlib==3.11.2
+psutil==7.2.2
+pytest==9.2.0
+tabulate==0.10.0

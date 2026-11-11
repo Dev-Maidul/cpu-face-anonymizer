@@ -1,4 +1,4 @@
-detector,model_size_mb,num_frames,total_time_s,fps,latency_ms_per_frame,cpu_percent,peak_memory_mb
-haar_cascade,0.0,60,3.391,17.69,56.51,568.8,691.83
-mobilenet_ssd,10.172,60,0.733,81.84,12.22,318.0,734.98
-mediapipe_blazeface,0.219,60,0.126,475.18,2.1,125.5,778.33
+detector,source,n_frames,n_repeats,median_latency_ms,iqr_latency_ms,fps_median,peak_memory_mb,model_size_mb,num_threads
+haar_cascade,wider_face_subset,200,5,498.022,67.356,2.01,266.36,0.0,1
+mobilenet_ssd,wider_face_subset,200,5,45.029,2.575,22.21,673.11,10.172,1
+mediapipe_blazeface,wider_face_subset,200,5,5.177,0.429,193.14,840.38,0.219,1

@@ -87,7 +87,7 @@ def write_environment_info(using_video):
     lines.append("Installed library versions (subset):")
     try:
         freeze = subprocess.run([sys.executable, "-m", "pip", "freeze"], capture_output=True, text=True).stdout
-        wanted = ("opencv-python", "mediapipe", "numpy", "pandas", "matplotlib", "psutil", "onnxruntime", "pytest")
+        wanted = ("opencv-python", "mediapipe", "numpy", "pandas", "matplotlib", "psutil", "pytest", "tabulate")
         for line in freeze.splitlines():
             if line.split("==")[0].lower() in wanted:
                 lines.append(f"  {line}")

@@ -1,0 +1,23 @@
+CPU model: Apple M1
+Physical cores: 8
+Logical cores: 8
+OS: macOS-27.0.1-arm64-arm-64bit-Mach-O
+Python: 3.13.9
+cv2.setNumThreads used for benchmark: 1
+Benchmark source: fixed 200-image WIDER FACE validation subset (no own video present)
+
+Energy measurement: NOT performed. powermetrics is present on this machine
+but requires root ('powermetrics must be invoked as the superuser'); this
+automated run does not use sudo. CPU% / latency are reported as efficiency
+proxies only -- not energy -- and the project is described as
+"CPU-efficient", not "green", because of this.
+
+Installed library versions (subset):
+  matplotlib==3.11.2
+  mediapipe==1.2.2
+  numpy==2.5.4
+  onnxruntime==1.31.1
+  opencv-python==4.10.0.84
+  pandas==3.1.1
+  psutil==7.2.2
+  pytest==9.2.0
