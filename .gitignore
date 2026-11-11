@@ -17,5 +17,9 @@ src/detectors/models/
 # Report/PPT deliverables (submitted to course, not pushed to GitHub)
 report/
 
+# Regenerable raw per-image detector cache (large; rerun evaluate.py/improve.py to rebuild)
+results/raw_detections/
+results/raw_detections_multiscale/
+
 # OS
 .DS_Store

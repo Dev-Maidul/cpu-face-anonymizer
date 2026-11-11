@@ -1,0 +1,7 @@
+detector,target_precision,achieved_precision,recall,threshold,note
+mobilenet_ssd,0.9,0.9208,0.102,0.28,
+mobilenet_ssd,0.8,0.8617,0.1142,0.2,
+mobilenet_ssd,0.7,0.7818,0.1254,0.16,
+mediapipe_blazeface,0.9,0.912,0.0244,0.72,
+mediapipe_blazeface,0.8,0.8281,0.0267,0.64,
+mediapipe_blazeface,0.7,0.7432,0.0285,0.56,

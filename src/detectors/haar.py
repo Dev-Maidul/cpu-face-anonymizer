@@ -6,6 +6,8 @@ _detector = cv2.CascadeClassifier(_cascade_path)
 
 NAME = "haar_cascade"
 MODEL_SIZE_MB = 0  # ships inside opencv-python, no separate file to measure
+HAS_CONFIDENCE_SCORE = False  # minNeighbors is a discrete knob, not a continuous
+# score -- no honest PR-curve sweep is possible for this detector (see README).
 
 
 def detect_faces(frame_bgr):

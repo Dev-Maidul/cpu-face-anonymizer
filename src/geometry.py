@@ -76,6 +76,31 @@ def match_boxes_detailed(pred_boxes, gt_boxes, threshold=IOU_THRESHOLD):
     return matched_gt, unmatched, tp, fp
 
 
+def match_per_prediction(pred_boxes, gt_boxes, threshold=IOU_THRESHOLD):
+    """Greedy one-to-one matching, but returns the outcome of EACH prediction
+    (not just totals) -- needed to bucket precision by the predicted box's own
+    size, since a false positive has no ground-truth box to bucket it by.
+
+    Returns (pred_matches, matched_gt): pred_matches[i] is the matched
+    ground-truth index for pred_boxes[i], or None if it's a false positive;
+    matched_gt is the set of ground-truth indices that got matched (for recall).
+    """
+    matched_gt = set()
+    pred_matches = [None] * len(pred_boxes)
+    for pi, pb in enumerate(pred_boxes):
+        best_iou, best_j = 0.0, -1
+        for j, gb in enumerate(gt_boxes):
+            if j in matched_gt:
+                continue
+            cur_iou = iou(pb, gb)
+            if cur_iou > best_iou:
+                best_iou, best_j = cur_iou, j
+        if best_iou >= threshold:
+            matched_gt.add(best_j)
+            pred_matches[pi] = best_j
+    return pred_matches, matched_gt
+
+
 def nms(boxes, scores, iou_threshold=0.4):
     """Greedy non-maximum suppression. boxes: list of (x,y,w,h), scores: list of float.
     Returns the indices (into the input lists) to keep, highest score first.
