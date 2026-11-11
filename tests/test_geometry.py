@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from geometry import iou, match_boxes, match_boxes_detailed, nms  # noqa: E402
+from geometry import iou, match_boxes, match_boxes_detailed, match_per_prediction, nms  # noqa: E402
 
 
 class TestIoU:
@@ -74,6 +74,21 @@ class TestMatchBoxes:
         assert unmatched == {1}
         assert tp == 1
         assert fp == 0
+
+
+class TestMatchPerPrediction:
+    def test_matches_and_false_positive(self):
+        gt = [(0, 0, 10, 10)]
+        preds = [(0, 0, 10, 10), (100, 100, 10, 10)]
+        pred_matches, matched_gt = match_per_prediction(preds, gt)
+        assert pred_matches == [0, None]
+        assert matched_gt == {0}
+
+    def test_empty_inputs(self):
+        assert match_per_prediction([], []) == ([], set())
+        pred_matches, matched_gt = match_per_prediction([], [(0, 0, 10, 10)])
+        assert pred_matches == []
+        assert matched_gt == set()
 
 
 class TestNMS:
