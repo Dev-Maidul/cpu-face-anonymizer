@@ -181,6 +181,18 @@ def load_single_scale_cache(det_name):
     return rows
 
 
+def load_per_detector_latency_ms():
+    """From benchmark.py's isolated, single-threaded measurement (results/benchmark.csv)
+    -- the most controlled latency number available, reused here rather than
+    re-measuring inline (which would mix in this script's own threading)."""
+    bench_path = os.path.join(RESULTS_DIR, "benchmark.csv")
+    if not os.path.isfile(bench_path):
+        print("[warn] results/benchmark.csv not found -- union latency will be omitted. Run benchmark.py first.")
+        return {}
+    df = pd.read_csv(bench_path)
+    return dict(zip(df["detector"], df["median_latency_ms"]))
+
+
 def eval_union(records):
     caches = {}
     thresholds = {}
@@ -191,6 +203,8 @@ def eval_union(records):
             continue
         caches[det.NAME] = cache
         thresholds[det.NAME] = getattr(det, "OPERATING_THRESHOLD", None)
+
+    latency_ms = load_per_detector_latency_ms()
 
     if len(caches) < 2:
         print("[skip] union experiment needs at least 2 cached detectors")
@@ -232,11 +246,13 @@ def eval_union(records):
                 overall_fn += len(gt_boxes) - len(matched_gt)
                 merge_counts(size_counts, recall_by_bucket(gt_box_records, matched_gt))
 
+            ms_per_image = sum(latency_ms.get(name, float("nan")) for name in combo) if latency_ms else float("nan")
             row = {
                 "config": " + ".join(combo),
                 "n_detectors": len(combo),
                 "recall_overall": round(safe_div(overall_tp, overall_tp + overall_fn), 4),
                 "precision_overall": round(safe_div(overall_tp, overall_tp + overall_fp), 4),
+                "ms_per_image": round(ms_per_image, 3) if ms_per_image == ms_per_image else ms_per_image,
             }
             for lbl in SIZE_LABELS:
                 c = size_counts[lbl]
